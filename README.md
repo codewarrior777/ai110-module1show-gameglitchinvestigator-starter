@@ -25,9 +25,9 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- [X] Describe the game's purpose.
+- [X] Detail which bugs you found.
+- [X ] Explain what fixes you applied.
 
 ## 📸 Demo Walkthrough
 
@@ -45,11 +45,18 @@ Describe your fixed game in numbered steps so a reader can follow along without 
 
 ## 🧪 Test Results
 
-```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
-```
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\gusra\OneDrive\ai110-module1show-game
+plugins: anyio-4.15.1
+collected 3 items
+
+tests/test_game_logic.py::test_winning_guess PASSED                     [ 33%]
+tests/test_game_logic.py::test_guess_too_high PASSED                    [ 66%]
+tests/test_game_logic.py::test_guess_too_low PASSED                     [100%]
+
+============================== 3 passed in 0.73s ==============================
+
 
 ## 🚀 Stretch Features
 
