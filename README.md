@@ -44,6 +44,8 @@ Describe your fixed game in numbered steps so a reader can follow along without 
 **Screenshot** 
 ![Winning game](screenshot_winning_game_AI_2026.png)
 
+**Demo video**: [Watch the winning moment 🎉]( video_winning_game_AI_2026.mp4)
+
 ## 🧪 Test Results
 
 ============================= test session starts =============================
