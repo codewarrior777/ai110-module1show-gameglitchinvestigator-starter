@@ -41,7 +41,8 @@ Describe your fixed game in numbered steps so a reader can follow along without 
 4. Score decreases by 5 after each wrong guess.
 5. User enters the correct secret. The game shows "🎉 Correct!", awards the win bonus, and ends the round.
 6. User clicks "New Game" to reset the score and pick a fresh secret.
-**Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
+**Screenshot** 
+![Winning game](screenshot_winning_game_AI_2026.png)
 
 ## 🧪 Test Results
 
@@ -60,4 +61,4 @@ tests/test_game_logic.py::test_guess_too_low PASSED                     [100%]
 
 ## 🚀 Stretch Features
 
-- [ ] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]
+- [X] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]
