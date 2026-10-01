@@ -33,12 +33,14 @@ It wrote the code, ran away, and now the game is unplayable.
 
 Describe your fixed game in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+## Demo Walkthrough
 
+1. User opens the app. A random secret number is generated within the difficulty's range (1–100 on Normal).
+2. User enters a guess of 80. The game shows "📉 Go LOWER!" because 80 is higher than the secret.
+3. User enters a guess of 20. The game shows "📈 Go HIGHER!" because 20 is lower than the secret.
+4. Score decreases by 5 after each wrong guess.
+5. User enters the correct secret. The game shows "🎉 Correct!", awards the win bonus, and ends the round.
+6. User clicks "New Game" to reset the score and pick a fresh secret.
 **Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
 
 ## 🧪 Test Results
