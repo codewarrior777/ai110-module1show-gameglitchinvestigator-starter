@@ -115,3 +115,39 @@ def win_rate(stats: dict) -> float:
     if stats["games_played"] == 0:
         return 0.0
     return round(100 * stats["games_won"] / stats["games_played"], 1)
+
+
+# ----------------------------------------------------------------------
+# Challenge 4: Proximity thermometer (Enhanced Game UI)
+# ----------------------------------------------------------------------
+
+def proximity_emoji(guess: int, secret: int) -> str:
+    """
+    Return a visual "hot/cold" indicator based on how close the guess is.
+
+    Diff scale:
+        0-5   -> very close (three flames)
+        6-15  -> close (two flames)
+        16-30 -> warm (one flame)
+        >30   -> cold (snowflake)
+    """
+    diff = abs(guess - secret)
+    if diff <= 5:
+        return "🔥🔥🔥"
+    if diff <= 15:
+        return "🔥🔥"
+    if diff <= 30:
+        return "🔥"
+    return "❄️"
+
+
+def proximity_label(guess: int, secret: int) -> str:
+    """Return a plain-text label matching proximity_emoji()."""
+    diff = abs(guess - secret)
+    if diff <= 5:
+        return "Very close!"
+    if diff <= 15:
+        return "Close"
+    if diff <= 30:
+        return "Warm"
+    return "Cold"

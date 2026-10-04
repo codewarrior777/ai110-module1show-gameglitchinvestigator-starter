@@ -3,6 +3,12 @@ Game Glitch Investigator - Streamlit UI.
 
 This file only handles the user interface. All game logic lives in
 logic_utils.py, which is tested by tests/test_game_logic.py.
+
+Challenge 4 (Enhanced Game UI):
+- Color-coded hints (red/blue/green by temperature)
+- Progress bar showing attempts used
+- Hot/Cold proximity thermometer with emojis
+- Attempt history table at the bottom
 """
 
 import streamlit as st
@@ -12,6 +18,8 @@ from logic_utils import (
     generate_secret,
     get_range_for_difficulty,
     parse_guess,
+    proximity_emoji,
+    proximity_label,
     update_score,
     update_session_stats,
     win_rate,
@@ -78,8 +86,18 @@ if "history" not in st.session_state:
 st.subheader("Make a guess")
 
 st.info(
-    f"Guess a number between {low} and {high}. "
-    f"Attempts left: {attempt_limit - st.session_state.attempts}"
+    f"Guess a number between {low} and {high}."
+)
+
+# ---- Challenge 4: progress bar instead of plain text counter ----
+progress_fraction = min(
+    st.session_state.attempts / attempt_limit, 1.0
+)
+st.progress(
+    progress_fraction,
+    text=(
+        f"🎯 Attempts used: {st.session_state.attempts} / {attempt_limit}"
+    ),
 )
 
 with st.expander("Developer Debug Info"):
@@ -122,6 +140,7 @@ if st.session_state.status != "playing":
         st.success("You already won. Start a new game to play again.")
     else:
         st.error("Game over. Start a new game to try again.")
+    # Still render the summary table below before stopping
     st.stop()
 
 # ------------------------------------------------------------------
@@ -129,27 +148,65 @@ if st.session_state.status != "playing":
 # ------------------------------------------------------------------
 if submit:
     st.session_state.attempts += 1
+    score_before = st.session_state.score
 
     ok, guess_int, err = parse_guess(raw_guess)
 
     if not ok:
-        st.session_state.history.append(raw_guess)
+        # Invalid input
+        st.session_state.history.append(
+            {
+                "Attempt": st.session_state.attempts,
+                "Guess": raw_guess,
+                "Result": "Invalid input",
+                "Heat": "—",
+            }
+        )
         st.error(err)
     else:
-        st.session_state.history.append(guess_int)
-
         outcome = check_guess(guess_int, st.session_state.secret)
 
-        if show_hint and outcome != "Win":
-            if outcome == "Too High":
-                st.warning("📉 Go LOWER!")
-            elif outcome == "Too Low":
-                st.warning("📈 Go HIGHER!")
-
+        # Update score first so we can capture the delta
         st.session_state.score = update_score(
             current_score=st.session_state.score,
             outcome=outcome,
             attempt_number=st.session_state.attempts,
+        )
+        score_delta = st.session_state.score - score_before
+
+        # ---- Challenge 4: colored hints + proximity thermometer ----
+        if outcome != "Win":
+            heat = proximity_emoji(guess_int, st.session_state.secret)
+            label = proximity_label(guess_int, st.session_state.secret)
+
+            if show_hint:
+                if outcome == "Too High":
+                    st.error(f"📉 Go LOWER!  (your guess was too high)")
+                else:
+                    st.info(f"📈 Go HIGHER!  (your guess was too low)")
+
+                # Thermometer color based on proximity
+                if heat == "🔥🔥🔥":
+                    st.success(f"{heat}  {label} — you're almost there!")
+                elif heat in ("🔥🔥", "🔥"):
+                    st.warning(f"{heat}  {label}")
+                else:
+                    st.info(f"{heat}  {label}")
+
+        # Log the attempt for the summary table
+        heat_symbol = (
+            proximity_emoji(guess_int, st.session_state.secret)
+            if outcome != "Win"
+            else "🏆"
+        )
+        st.session_state.history.append(
+            {
+                "Attempt": st.session_state.attempts,
+                "Guess": guess_int,
+                "Result": outcome,
+                "Heat": heat_symbol,
+                "Score Δ": score_delta,
+            }
         )
 
         if outcome == "Win":
@@ -174,6 +231,18 @@ if submit:
                     f"The secret was {st.session_state.secret}. "
                     f"Score: {st.session_state.score}"
                 )
+
+# ------------------------------------------------------------------
+# Challenge 4: attempt history summary table
+# ------------------------------------------------------------------
+if st.session_state.history:
+    st.divider()
+    st.subheader("📋 Attempt History")
+    st.dataframe(
+        st.session_state.history,
+        use_container_width=True,
+        hide_index=True,
+    )
 
 # ------------------------------------------------------------------
 # Challenge 2: Session Stats sidebar

@@ -182,6 +182,40 @@ $ python -m pytest tests/ -v
 
 ---
 
+## UI Enhancements (Challenge 4)
+
+> Document the UI improvements added to the game.
+
+**Features added:**
+
+1. **Progress bar** — Replaced the plain-text attempt counter with `st.progress()` showing a visual bar of attempts used vs allowed.
+2. **Color-coded hints** — Wrong guesses now render as `st.error()` (red) for "Too High" and `st.info()` (blue) for "Too Low", making the direction obvious at a glance. Each hint also includes a short parenthetical explanation.
+3. **Hot/Cold thermometer** — Each guess is scored on proximity to the secret using `proximity_emoji()` and `proximity_label()` in `logic_utils.py`. Results range from `🔥🔥🔥 Very close!` (diff ≤ 5) to `❄️ Cold` (diff > 30).
+4. **Attempt history table** — All attempts are logged as dicts and rendered with `st.dataframe()`, showing attempt number, guess, result, heat, and score delta in one view.
+
+**Files modified:**
+- `logic_utils.py` — Added `proximity_emoji()` and `proximity_label()`. Both are pure functions (no Streamlit imports) so they could be unit tested if needed.
+- `app.py` — Replaced counter with progress bar; added thermometer display after each guess; changed history storage from list-of-ints to list-of-dicts so it can be rendered as a table; added the "📋 Attempt History" section.
+
+**Why this improves the experience:**
+
+The original game showed a single cryptic hint and a running attempt count. The improvements:
+- Make the direction hint **visually obvious** (color = immediate signal).
+- Give the player a **sense of progress** with the bar.
+- Communicate **how close** they are, not just the direction.
+- Provide a **review screen** showing all attempts — useful for learning patterns.
+
+**Verification:**
+
+Tested manually:
+- Guess 23 (secret 28, diff 5) → 🔥🔥🔥 "Very close!" ✅
+- Guess 23 (secret 60, diff 37) → ❄️ "Cold" ✅
+- Progress bar fills correctly with each attempt ✅
+- Attempt History table updates after every guess ✅
+- All 6 pytest tests still pass ✅
+
+---
+
 ## Model Comparison (SF11)
 
 > Compare two AI models on the same task.
