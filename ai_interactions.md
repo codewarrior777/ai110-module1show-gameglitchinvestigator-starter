@@ -10,15 +10,49 @@
 
 **What task did you give the agent?**
 
-<!-- To be completed in Challenge 2 (Feature Expansion). -->
+```
+Add a "Session Stats" sidebar to the Game Glitch Investigator app that tracks
+cumulative statistics across multiple rounds. The sidebar should display:
+- Games played
+- Games won
+- Win rate (as a percentage)
+- Best score
+
+Requirements:
+1. Store the stats in st.session_state so they persist across Streamlit reruns.
+2. Add two pure functions to logic_utils.py: update_session_stats(stats, outcome, score)
+   and win_rate(stats) — keep the logic separate from the UI for testability.
+3. Update the stats every time a game ends (win or loss).
+4. Include a "Reset stats" button in the sidebar.
+5. Follow the existing code style (comments in English, PEP 8).
+```
 
 **What did the agent do?**
 
-<!-- To be completed in Challenge 2 (Feature Expansion). -->
+Files edited:
+- `logic_utils.py` — Added `update_session_stats()` and `win_rate()` at the end of the file. Both functions are pure (no Streamlit imports) so they can be unit tested.
+- `app.py` —
+  - Added imports for the two new functions.
+  - Initialized `st.session_state.stats` with default keys (`games_played`, `games_won`, `best_score`).
+  - Added a "📊 Session Stats" sidebar section with `st.metric()` calls and a "Reset stats" button.
+  - Called `update_session_stats()` inside the win branch and the loss branch of the submit handler.
 
 **What did you have to verify or fix manually?**
 
-<!-- To be completed in Challenge 2 (Feature Expansion). -->
+The AI's first version placed the sidebar metrics **before** the submit handler. This caused a bug: when the player won, the sidebar displayed **stale values** (0 games played, 0 games won) because Streamlit renders top-to-bottom in a single pass.
+
+I fixed it by:
+1. Moving the entire "Session Stats" sidebar block **to the end of the script**, after the submit handler. This way, on the same rerun the game is won, the metrics render with the freshly updated values.
+2. Adding an inline comment explaining **why** the block is at the bottom, so a future reader doesn't "helpfully" move it back and re-introduce the bug.
+
+I also discovered a separate mismatch: my first `update_session_stats()` incremented `games_played` only on "New Game" outcomes. After integrating the UI, `games_played` stayed at 0 while `games_won` went to 1. I fixed the function so it increments `games_played` **every time the function is called** (Win or Loss), and only `games_won` is conditional.
+
+**Verification:**
+
+- Played one winning round → sidebar showed: Games played: 1, Games won: 1, Win rate: 100.0%, Best score: 90.
+- Played one losing round → sidebar showed: Games played: 2, Games won: 1, Win rate: 50.0%, Best score: 90.
+- Clicked "Reset stats" → all metrics returned to 0.
+- Ran `python -m pytest tests/ -v` → all 6 tests still pass.
 
 ---
 

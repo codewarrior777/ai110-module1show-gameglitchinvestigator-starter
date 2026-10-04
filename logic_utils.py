@@ -78,3 +78,41 @@ def generate_secret(difficulty: str) -> int:
     """Generate a random secret within the difficulty's range."""
     low, high = get_range_for_difficulty(difficulty)
     return random.randint(low, high)
+
+
+# ----------------------------------------------------------------------
+# Challenge 2: Session Stats (Feature Expansion)
+# ----------------------------------------------------------------------
+
+def update_session_stats(stats: dict, outcome: str, score: int) -> dict:
+    """
+    Update cumulative session statistics.
+
+    Called once per game-end (Win or Loss). Increments games_played
+    every time, and additionally increments games_won if the outcome
+    was "Win". Also tracks the best score seen so far.
+
+    Args:
+        stats:   dict with keys: games_played, games_won, best_score
+        outcome: "Win" or "Loss"
+        score:   the final score of the round
+
+    Returns:
+        The updated stats dict (mutated in place and returned for
+        convenience).
+    """
+    stats["games_played"] += 1
+
+    if outcome == "Win":
+        stats["games_won"] += 1
+        if score > stats["best_score"]:
+            stats["best_score"] = score
+
+    return stats
+
+
+def win_rate(stats: dict) -> float:
+    """Return win rate as a percentage (0-100), or 0.0 if no games played."""
+    if stats["games_played"] == 0:
+        return 0.0
+    return round(100 * stats["games_won"] / stats["games_played"], 1)

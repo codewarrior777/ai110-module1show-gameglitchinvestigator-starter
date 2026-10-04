@@ -138,7 +138,7 @@ ai110-module1show-gameglitchinvestigator-starter/
 ## 🚀 Stretch Features
 
 - [x] **Challenge 1 — Advanced Edge-Case Testing**: 3+ pytest cases targeting complex edge cases (non-numeric strings, empty inputs, float-as-string inputs). See `tests/test_game_logic.py` and `ai_interactions.md`.
-- [ ] Challenge 2 — Feature Expansion via Agent Mode
+- [x] **Challenge 2 — Feature Expansion via Agent Mode**: Added a "📊 Session Stats" sidebar that tracks games played, games won, win rate, and best score across rounds. Uses `st.session_state` for persistence. Logic in `logic_utils.py` (`update_session_stats`, `win_rate`), UI in `app.py`. See `ai_interactions.md` for the full agent workflow.
 - [ ] Challenge 3 — Professional Documentation
 - [ ] Challenge 4 — Enhanced Game UI
 - [ ] Challenge 5 — AI Model Comparison

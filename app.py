@@ -13,6 +13,8 @@ from logic_utils import (
     get_range_for_difficulty,
     parse_guess,
     update_score,
+    update_session_stats,
+    win_rate,
 )
 
 # ------------------------------------------------------------------
@@ -23,7 +25,7 @@ st.title("🎮 Game Glitch Investigator")
 st.caption("An AI-generated guessing game. Something is off.")
 
 # ------------------------------------------------------------------
-# Sidebar
+# Sidebar settings
 # ------------------------------------------------------------------
 st.sidebar.header("Settings")
 
@@ -47,8 +49,14 @@ st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 
 # ------------------------------------------------------------------
 # Session state initialization
-# FIX: attempts now start at 0 (not 1) so the UI matches reality.
 # ------------------------------------------------------------------
+if "stats" not in st.session_state:
+    st.session_state.stats = {
+        "games_played": 0,
+        "games_won": 0,
+        "best_score": 0,
+    }
+
 if "secret" not in st.session_state:
     st.session_state.secret = generate_secret(difficulty)
 
@@ -96,7 +104,6 @@ with col3:
 
 # ------------------------------------------------------------------
 # New game handler
-# FIX: uses generate_secret() so it respects the difficulty range.
 # ------------------------------------------------------------------
 if new_game:
     st.session_state.attempts = 0
@@ -119,8 +126,6 @@ if st.session_state.status != "playing":
 
 # ------------------------------------------------------------------
 # Submit handler
-# FIX: removed the broken "if attempts % 2 == 0: secret = str(secret)"
-# code that was silently corrupting the comparison.
 # ------------------------------------------------------------------
 if submit:
     st.session_state.attempts += 1
@@ -150,6 +155,9 @@ if submit:
         if outcome == "Win":
             st.balloons()
             st.session_state.status = "won"
+            update_session_stats(
+                st.session_state.stats, "Win", st.session_state.score
+            )
             st.success(
                 f"🎉 Correct! You won! The secret was "
                 f"{st.session_state.secret}. "
@@ -158,11 +166,43 @@ if submit:
         else:
             if st.session_state.attempts >= attempt_limit:
                 st.session_state.status = "lost"
+                update_session_stats(
+                    st.session_state.stats, "Loss", st.session_state.score
+                )
                 st.error(
                     f"Out of attempts! "
                     f"The secret was {st.session_state.secret}. "
                     f"Score: {st.session_state.score}"
                 )
 
+# ------------------------------------------------------------------
+# Challenge 2: Session Stats sidebar
+#
+# IMPORTANT: This block is at the END of the script on purpose.
+# Streamlit renders top-to-bottom, so if the metrics were rendered
+# before the submit handler, they would show stale values on the
+# same rerun the game is won/lost. Placing them here ensures they
+# pick up the freshly updated session_state.stats.
+# ------------------------------------------------------------------
+st.sidebar.divider()
+st.sidebar.header("📊 Session Stats")
+
+stats = st.session_state.stats
+st.sidebar.metric("Games played", stats["games_played"])
+st.sidebar.metric("Games won", stats["games_won"])
+st.sidebar.metric("Win rate", f"{win_rate(stats)}%")
+st.sidebar.metric("Best score", stats["best_score"])
+
+if st.sidebar.button("Reset stats"):
+    st.session_state.stats = {
+        "games_played": 0,
+        "games_won": 0,
+        "best_score": 0,
+    }
+    st.rerun()
+
+# ------------------------------------------------------------------
+# Footer
+# ------------------------------------------------------------------
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
