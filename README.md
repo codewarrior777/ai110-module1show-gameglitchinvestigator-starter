@@ -139,7 +139,7 @@ ai110-module1show-gameglitchinvestigator-starter/
 
 - [x] **Challenge 1 — Advanced Edge-Case Testing**: 3+ pytest cases targeting complex edge cases (non-numeric strings, empty inputs, float-as-string inputs). See `tests/test_game_logic.py` and `ai_interactions.md`.
 - [x] **Challenge 2 — Feature Expansion via Agent Mode**: Added a "📊 Session Stats" sidebar that tracks games played, games won, win rate, and best score across rounds. Uses `st.session_state` for persistence. Logic in `logic_utils.py` (`update_session_stats`, `win_rate`), UI in `app.py`. See `ai_interactions.md` for the full agent workflow.
-- [ ] Challenge 3 — Professional Documentation
+- [x] **Challenge 3 — Professional Documentation**: Added PEP 257 docstrings to all functions in `logic_utils.py` and ran `ruff` to enforce PEP 8 style. Fixed one linting suggestion (replaced an `if` comparison with `max()`). See `ai_interactions.md` for the full prompt and before/after.
 - [ ] Challenge 4 — Enhanced Game UI
 - [ ] Challenge 5 — AI Model Comparison
 

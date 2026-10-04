@@ -105,8 +105,7 @@ def update_session_stats(stats: dict, outcome: str, score: int) -> dict:
 
     if outcome == "Win":
         stats["games_won"] += 1
-        if score > stats["best_score"]:
-            stats["best_score"] = score
+        stats["best_score"] = max(stats["best_score"], score)
 
     return stats
 

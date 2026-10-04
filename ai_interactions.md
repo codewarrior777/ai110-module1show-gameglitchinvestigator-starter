@@ -116,18 +116,69 @@ tests/test_game_logic.py::test_parse_guess_converts_float_string_to_int PASSED [
 **Prompt used:**
 
 ```
-<!-- To be completed in Challenge 3 (Professional Documentation). -->
+Install ruff in my virtual environment and run it against logic_utils.py and
+app.py. For each warning it reports:
+1. Explain in plain English what the warning means.
+2. Show the before/after of the suggested fix.
+3. Confirm the fix keeps the existing behavior.
+Then apply the fix and re-run ruff to confirm the code is clean.
 ```
 
 **Linting output before:**
 
 ```
-<!-- To be completed in Challenge 3 (Professional Documentation). -->
+$ ruff check logic_utils.py app.py
+PLR1730 [*] Replace `if` statement with `max` call
+  --> logic_utils.py:108:9
+   |
+106 |     if outcome == "Win":
+107 |         stats["games_won"] += 1
+108 |         if score > stats["best_score"]:
+109 |             stats["best_score"] = score
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+110 |
+   |
+help: Replace with `max` call
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.
 ```
 
 **Changes applied:**
 
-<!-- To be completed in Challenge 3 (Professional Documentation). -->
+The linter flagged one stylistic improvement in `update_session_stats()`. The original code used an explicit `if` comparison to update `best_score`:
+
+```python
+# Before
+if score > stats["best_score"]:
+    stats["best_score"] = score
+```
+
+`ruff` suggested replacing it with Python's built-in `max()`:
+
+```python
+# After
+stats["best_score"] = max(stats["best_score"], score)
+```
+
+**Why I applied it:**
+- It's more idiomatic Python — `max()` clearly expresses the intent ("keep the larger of these two values").
+- It's shorter (1 line vs 2) and eliminates a branch.
+- Behavior is identical; I verified by running the test suite and manually playing both a winning and a losing round.
+
+**Verification:**
+
+```
+$ ruff check logic_utils.py app.py
+All checks passed!
+
+$ python -m pytest tests/ -v
+============================== 6 passed in 0.63s ==============================
+```
+
+**Notes on what I did NOT apply:**
+
+`ruff` did not report any other warnings in either file, so no other changes were needed. I checked manually that `logic_utils.py` already had PEP 257-style docstrings on every function before the linting step, so no additional documentation was required for this challenge.
 
 ---
 
