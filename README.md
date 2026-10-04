@@ -141,7 +141,7 @@ ai110-module1show-gameglitchinvestigator-starter/
 - [x] **Challenge 2 — Feature Expansion via Agent Mode**: Added a "📊 Session Stats" sidebar that tracks games played, games won, win rate, and best score across rounds. Uses `st.session_state` for persistence. Logic in `logic_utils.py` (`update_session_stats`, `win_rate`), UI in `app.py`. See `ai_interactions.md` for the full agent workflow.
 - [x] **Challenge 3 — Professional Documentation**: Added PEP 257 docstrings to all functions in `logic_utils.py` and ran `ruff` to enforce PEP 8 style. Fixed one linting suggestion (replaced an `if` comparison with `max()`). See `ai_interactions.md` for the full prompt and before/after.
 - [x] **Challenge 4 — Enhanced Game UI**: Added a visual progress bar for attempts, color-coded hints (red for "Too High", blue for "Too Low"), a 🔥/❄️ hot-cold proximity thermometer, and an attempt history table rendered with `st.dataframe()`. See `ai_interactions.md` for the full description.
-- [ ] Challenge 5 — AI Model Comparison
+- [x] **Challenge 5 — AI Model Comparison**: Compared ChatGPT (GPT-4o) vs Gemini (Flash) on the inverted-hint bug. Both produced the same fix; ChatGPT gave a more concise explanation, Gemini a more structured one. See `ai_interactions.md` for the full analysis and side-by-side comparison.
 
 ---
 

@@ -222,15 +222,45 @@ Tested manually:
 
 **Task given to both models:**
 
-<!-- To be completed in Challenge 5 (AI Model Comparison). -->
+```
+I have this buggy Python function:
+
+def check_guess(guess, secret):
+    if guess == secret:
+        return "Win", "🎉 Correct!"
+    try:
+        if guess > secret:
+            return "Too High", "📈 Go HIGHER!"
+        else:
+            return "Too Low", "📉 Go LOWER!"
+    except TypeError:
+        g = str(guess)
+        if g == secret:
+            return "Win", "🎉 Correct!"
+        if g > secret:
+            return "Too High", "📈 Go HIGHER!"
+        return "Too Low", "📉 Go LOWER!"
+
+The bug: when guess > secret, the player is told "Go HIGHER!" but they
+should be told "Go LOWER!" because their guess was too high. The same
+inversion exists for the other branch.
+
+Fix the bug and explain your reasoning.
+```
 
 | | Model A | Model B |
 |-|---------|---------|
-| **Model name** | | |
-| **Response summary** | | |
-| **More Pythonic?** | | |
-| **Clearer explanation?** | | |
+| **Model name** | ChatGPT (GPT-4o) | Gemini (Flash) |
+| **Response summary** | Fixed both branches by swapping the hint strings, plus the TypeError fallback. Explained each branch in short bullet points. | Fixed both branches by swapping the hint strings, plus the TypeError fallback. Explained each branch with numbered subsections ("Branch 1", "Branch 2", "TypeError Block"). |
+| **More Pythonic?** | Tie — both produced the same fix, keeping the original `try/except` structure. | Tie — same fix. |
+| **Clearer explanation?** | **ChatGPT** — the bullets were short and scannable. | **Gemini** — the numbered structure was more thorough but longer. |
 
 **Which did you prefer and why?**
 
-<!-- To be completed in Challenge 5 (AI Model Comparison). -->
+I preferred **ChatGPT's response** for this specific bug. The bug is small (one line per branch), so a verbose explanation was overkill. ChatGPT's three bullets — "guess > secret means the player should go LOWER", "guess < secret means the player should go HIGHER", "the TypeError fallback has the same inversion" — explained everything in ~15 seconds of reading.
+
+Gemini's response was more thorough and would have been better for a **larger, more complex refactor**. For a two-line fix, it was more text than necessary. Both models are equally correct; the choice comes down to **explanation density vs. explanation depth**.
+
+**Observation neither model made:**
+
+Neither model pointed out that the `try/except TypeError` block is **dead code** in Python 3. Comparing an `int` to a `str` with `>` raises a `TypeError`, but the outer logic already ensures `guess` and `secret` are both integers when this function is called. Removing the `try/except` entirely would be a more "Pythonic" fix, but it would also change behavior if the function is ever called with mixed types. I kept the fix minimal to avoid introducing regressions.
