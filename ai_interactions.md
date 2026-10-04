@@ -10,15 +10,15 @@
 
 **What task did you give the agent?**
 
-<!-- Describe the goal you asked the agent to accomplish -->
+<!-- To be completed in Challenge 2 (Feature Expansion). -->
 
 **What did the agent do?**
 
-<!-- List the steps the agent took (files edited, commands run, etc.) -->
+<!-- To be completed in Challenge 2 (Feature Expansion). -->
 
 **What did you have to verify or fix manually?**
 
-<!-- Describe anything the agent got wrong or that required human review -->
+<!-- To be completed in Challenge 2 (Feature Expansion). -->
 
 ---
 
@@ -26,11 +26,52 @@
 
 > Document how you used AI to help generate or improve tests.
 
+**Prompt used (verbatim):**
+
+```
+I need 3 pytest edge case tests for a function called parse_guess that
+converts user input strings into integers. The function returns a tuple:
+(ok: bool, value: int | None, error_message: str | None).
+
+Test these three edge cases:
+1. Non-numeric input like "abc"
+2. Empty string ""
+3. Decimal written as string like "3.7"
+
+For each, show the assertion that proves the correct behavior.
+```
+
+**AI-suggested tests table:**
+
 | Edge Case | Prompt Used | AI-Suggested Test | Did It Pass? | Your Reasoning |
 |-----------|-------------|-------------------|--------------|----------------|
-| | | | | |
-| | | | | |
-| | | | | |
+| `"abc"` (non-numeric) | Above prompt | `test_parse_guess_rejects_non_numeric_input` | ✅ Yes | Users can type letters by accident. The parser must reject without crashing and return a helpful error message. |
+| `""` (empty string) | Above prompt | `test_parse_guess_rejects_empty_input` | ✅ Yes | If the user clicks Submit without typing anything, the game should not crash — it should prompt them to enter a guess. |
+| `"3.7"` (decimal as string) | Above prompt | `test_parse_guess_converts_float_string_to_int` | ✅ Yes | The original parser explicitly handles this case via `int(float(raw))`. Locking the behavior with a test prevents future regressions. |
+
+**Verification:**
+
+All 6 tests (3 core + 3 edge case) pass:
+
+```
+$ python -m pytest tests/ -v
+============================= test session starts =============================
+collected 6 items
+
+tests/test_game_logic.py::test_winning_guess PASSED                       [ 16%]
+tests/test_game_logic.py::test_guess_too_high PASSED                      [ 33%]
+tests/test_game_logic.py::test_guess_too_low PASSED                       [ 50%]
+tests/test_game_logic.py::test_parse_guess_rejects_non_numeric_input PASSED  [ 66%]
+tests/test_game_logic.py::test_parse_guess_rejects_empty_input PASSED     [ 83%]
+tests/test_game_logic.py::test_parse_guess_converts_float_string_to_int PASSED [100%]
+
+============================== 6 passed in 0.41s ==============================
+```
+
+**Notes on AI suggestions:**
+
+- The AI proposed all three edge cases when prompted.
+- It also proposed a 4th test for negative numbers (`"-5"`), which I rejected: negative guesses are out of scope for a game where the range is 1–100. Adding that test would suggest negative input is expected, which is misleading.
 
 ---
 
@@ -41,18 +82,18 @@
 **Prompt used:**
 
 ```
-<!-- Paste the prompt you gave the AI -->
+<!-- To be completed in Challenge 3 (Professional Documentation). -->
 ```
 
 **Linting output before:**
 
 ```
-<!-- Paste relevant linter warnings/errors -->
+<!-- To be completed in Challenge 3 (Professional Documentation). -->
 ```
 
 **Changes applied:**
 
-<!-- Describe what you changed based on the AI's suggestions -->
+<!-- To be completed in Challenge 3 (Professional Documentation). -->
 
 ---
 
@@ -62,7 +103,7 @@
 
 **Task given to both models:**
 
-<!-- Describe what you asked each model to do -->
+<!-- To be completed in Challenge 5 (AI Model Comparison). -->
 
 | | Model A | Model B |
 |-|---------|---------|
@@ -73,4 +114,4 @@
 
 **Which did you prefer and why?**
 
-<!-- Your conclusion -->
+<!-- To be completed in Challenge 5 (AI Model Comparison). -->
